@@ -1,4 +1,1 @@
-{
-  "buildCommand": "echo 'Static HTML'",
-  "installCommand": "echo 'No install needed'"
-}
+{}

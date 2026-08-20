@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenWiki - 에이전트를 위한 문서 작성법</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root {
+  --primary: #3B82F6;
+  --primary-deep: #1E40AF;
+  --primary-light: #EFF6FF;
+  --ink: #1C1C1A;
+  --ink-2: #3D3D39;
+  --muted: #6B6B65;
+  --muted-2: #94948C;
+  --bg: #FCFCFA;
+  --white: #FFFFFF;
+  --border: #E4E4DE;
+  --sans: 'Pretendard Variable', Pretendard, 'Noto Sans CJK KR', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.sidebar {
+  width: 280px;
+  padding: 30px 20px;
+  border-right: 1px solid var(--border);
+  height: 100vh;
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+  background: var(--white);
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: var(--primary-light);
+  border-radius: 6px;
+}
+
+.sidebar-brand-icon {
+  font-size: 20px;
+}
+
+.sidebar-brand-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-deep);
+}
+
+.sidebar-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--muted-2);
+  margin: 20px 0 12px;
+  text-transform: uppercase;
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 20px;
+}
+
+.nav-item {
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  background: var(--primary-light);
+  color: var(--primary-deep);
+}
+
+.nav-item.active {
+  background: var(--primary-light);
+  color: var(--primary-deep);
+  border-left-color: var(--primary);
+  font-weight: 600;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 15px 0;
+}
+
+.main {
+  flex: 1;
+  padding: 50px 60px;
+  max-width: 900px;
+}
+
+.header {
+  margin-bottom: 50px;
+  padding-bottom: 30px;
+  border-bottom: 2px solid var(--primary);
+}
+
+.brand {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--primary-deep);
+  background: var(--primary-light);
+  padding: 6px 12px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 15px;
+}
+
+.lead {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.section {
+  margin-bottom: 60px;
+  scroll-margin-top: 80px;
+}
+
+.section-heading {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 25px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-intro {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 25px;
+  line-height: 1.7;
+}
+
+.callout {
+  padding: 20px;
+  background: var(--primary-light);
+  border-left: 4px solid var(--primary);
+  border-radius: 4px;
+  margin: 25px 0;
+}
+
+.callout-title {
+  font-weight: 700;
+  color: var(--primary-deep);
+  margin-bottom: 8px;
+}
+
+.callout-text {
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.7;
+}
+
+.code-block {
+  background: #f0f4f8;
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--ink-2);
+  margin: 20px 0;
+  line-height: 1.8;
+}
+
+.code-block strong {
+  color: var(--primary-deep);
+}
+
+ul {
+  margin: 15px 0;
+}
+
+li {
+  margin: 8px 0 8px 20px;
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding-top: 30px;
+  margin-top: 60px;
+  font-size: 12px;
+  color: var(--muted-2);
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .main {
+    padding: 30px 20px;
+  }
+  h1 {
+    font-size: 28px;
+  }
+  .section-heading {
+    font-size: 20px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- 좌측 네비게이션 -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="sidebar-brand-icon">📚</span>
+      <span class="sidebar-brand-text">OpenWiki</span>
+    </div>
+
+    <div class="sidebar-title">주요 내용</div>
+    <div class="nav-list">
+      <div class="nav-item active" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">개요</div>
+      <div class="nav-item" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">만든 이유</div>
+      <div class="nav-item" onclick="document.getElementById('s2').scrollIntoView({behavior:'smooth'})">핵심 가설</div>
+      <div class="nav-item" onclick="document.getElementById('s3').scrollIntoView({behavior:'smooth'})">생성 구조</div>
+      <div class="nav-item" onclick="document.getElementById('s4').scrollIntoView({behavior:'smooth'})">OKF 표준</div>
+      <div class="nav-item" onclick="document.getElementById('s5').scrollIntoView({behavior:'smooth'})">CLI 사용법</div>
+      <div class="nav-item" onclick="document.getElementById('s6').scrollIntoView({behavior:'smooth'})">성능 평가</div>
+      <div class="nav-item" onclick="document.getElementById('s7').scrollIntoView({behavior:'smooth'})">향후 계획</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sidebar-title">정보</div>
+    <div style="font-size: 12px; color: var(--muted); line-height: 1.8;">
+      <p style="margin: 0;">📺 <strong>YouTube</strong></p>
+      <p style="margin: 8px 0 0;">🎓 기술 교육</p>
+      <p style="margin: 8px 0 0;">🤖 AI/에이전트</p>
+      <p style="margin: 12px 0 0; color: var(--muted-2); font-size: 11px;">
+        2024년 발표
+      </p>
+    </div>
+  </aside>
+
+  <!-- 메인 콘텐츠 -->
+  <main class="main">
+    <!-- 헤더 -->
+    <header class="header" id="intro">
+      <span class="brand">YouTube 트랜스크립트</span>
+      <h1>사람이 아닌 에이전트를 위한 문서 작성법</h1>
+      <p class="lead">
+        OpenWiki 내부 공개: 에이전트가 소비하기 위해 만들어진<br>
+        리포지토리 문서 자동 생성 및 유지 도구
+      </p>
+    </header>
+
+    <!-- 개요 -->
+    <div class="callout">
+      <div class="callout-title">📌 핵심 개념</div>
+      <div class="callout-text">
+        OpenWiki는 <strong>에이전트를 위해 특별히 설계된</strong> CLI 도구입니다.
+        코드 저장소의 문서를 자동으로 생성하고,
+        GitHub Actions로 지속적으로 업데이트합니다.
+      </div>
+    </div>
+
+    <!-- 01. 만든 이유 -->
+    <section class="section" id="s1">
+      <h2 class="section-heading">🎯 OpenWiki를 만든 이유</h2>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">핵심 질문</h3>
+      <p style="margin-bottom: 15px;">CEO가 던진 질문: <strong>"다음 큰 AI 혁신은 무엇인가?"</strong></p>
+
+      <div class="code-block">
+        <div><strong>2023년:</strong> OpenClaw (개인 에이전트)</div>
+        <div style="margin-top: 10px;"><strong>2024년:</strong> General Purpose Memory (범용 메모리)</div>
+      </div>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">기술적 배경</h3>
+      <p>현대의 LLM과 에이전트 아키텍처로 이제 범용 메모리 솔루션이 가능해졌습니다.</p>
+      <p style="margin-top: 15px; font-size: 14px; color: var(--muted);">코드 기반 문서를 시작으로, 향후 다양한 메모리 영역으로 확장:</p>
+      <ul>
+        <li>코드 저장소 문서</li>
+        <li>조직 정보</li>
+        <li>시스템 설계</li>
+        <li>비즈니스 규칙</li>
+      </ul>
+    </section>
+
+    <!-- 02. 핵심 가설 -->
+    <section class="section" id="s2">
+      <h2 class="section-heading">💡 3가지 핵심 가설</h2>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">1️⃣ 에이전트를 위해 설계</h3>
+      <p style="margin-bottom: 15px;">기존 문서와 에이전트 문서는 완전히 다릅니다:</p>
+
+      <div class="code-block">
+        <div><strong>기존 (인간 중심):</strong></div>
+        <div style="margin-left: 20px; margin-top: 8px;">• 스토리 구조와 흐름</div>
+        <div style="margin-left: 20px;">• 스크린샷과 비디오</div>
+        <div style="margin-left: 20px;">• 연속적인 내러티브</div>
+        <div style="margin-left: 20px;">• 맥락적 이해 필요</div>
+
+        <div style="margin-top: 15px;"><strong>에이전트 (OpenWiki):</strong></div>
+        <div style="margin-left: 20px; margin-top: 8px;">✅ 자체 완결적 콘텐츠 (snippets)</div>
+        <div style="margin-left: 20px;">✅ 예측 가능하고 정확한 헤딩</div>
+        <div style="margin-left: 20px;">✅ 컨텍스트 윈도우 최적화</div>
+        <div style="margin-left: 20px;">✅ 필터링과 검색 지원</div>
+      </div>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">2️⃣ 설정 및 실행의 간편성</h3>
+      <p style="margin-bottom: 15px;">목표: 개발자가 쉽게 시작할 수 있도록</p>
+
+      <div class="code-block">
+        <div><strong>설치:</strong></div>
+        <div style="margin-left: 20px; margin-top: 8px; color: var(--primary-deep);">npm install openwiki</div>
+
+        <div style="margin-top: 15px;"><strong>초기화:</strong></div>
+        <div style="margin-left: 20px; margin-top: 8px; color: var(--primary-deep);">open wiki init</div>
+
+        <div style="margin-top: 15px;"><strong>자동 생성:</strong></div>
+        <div style="margin-left: 20px; margin-top: 8px;">• agents.md 또는 claw.md 수정</div>
+        <div style="margin-left: 20px;">• GitHub Actions 워크플로우 추가</div>
+        <div style="margin-left: 20px;">• 매일 실행되는 cron job</div>
+      </div>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">3️⃣ 자동 업데이트</h3>
+      <div class="code-block">
+        <div><strong>요구사항:</strong></div>
+        <div style="margin-left: 20px; margin-top: 8px;">• 코드 변경 시 문서 자동 업데이트</div>
+        <div style="margin-left: 20px;">• 인간의 추가 작업 없음</div>
+        <div style="margin-left: 20px;">• GitHub Actions로 자동화</div>
+      </div>
+    </section>
+
+    <!-- 03. 생성 구조 -->
+    <section class="section" id="s3">
+      <h2 class="section-heading">🏗️ OpenWiki의 생성 구조</h2>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">생성 파일</h3>
+      <div class="code-block">
+        <div><strong>wiki/</strong></div>
+        <div style="margin-left: 20px;">├── <strong style="color: var(--primary-deep);">quickstart.md</strong></div>
+        <div style="margin-left: 20px;"> │&nbsp;&nbsp;&nbsp;# 저수준 개요 (에이전트 진입점)</div>
+        <div style="margin-left: 20px;">├── <strong style="color: var(--primary-deep);">CHANGELOG.md</strong></div>
+        <div style="margin-left: 20px;"> │&nbsp;&nbsp;&nbsp;# 변경 이력</div>
+        <div style="margin-left: 20px;">├── <strong style="color: var(--primary-deep);">INDEX.md</strong></div>
+        <div style="margin-left: 20px;"> │&nbsp;&nbsp;&nbsp;# 파일 색인</div>
+        <div style="margin-left: 20px;">├── <strong style="color: #1E40AF;">[topic-folders]/</strong></div>
+        <div style="margin-left: 40px;">│&nbsp;&nbsp;&nbsp;├── <strong style="color: var(--primary-deep);">[topic].md</strong></div>
+        <div style="margin-left: 40px;">│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;# OKF 형식의 마크다운</div>
+        <div style="margin-left: 40px;">│&nbsp;&nbsp;&nbsp;└── <strong style="color: var(--primary-deep);">index.md</strong></div>
+        <div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# 폴더 색인</div>
+        <div style="margin-left: 20px;">└── <strong style="color: var(--primary-deep);">agents.md</strong></div>
+        <div style="margin-left: 20px;">&nbsp;&nbsp;&nbsp;# 에이전트 인식</div>
+      </div>
+    </section>
+
+    <!-- 04. OKF 표준 -->
+    <section class="section" id="s4">
+      <h2 class="section-heading">📋 OKF (Open Knowledge Format)</h2>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">개념</h3>
+      <p style="margin-bottom: 15px;">Google이 정의한 표준으로, 마크다운 파일의 상단에 메타데이터를 추가합니다.</p>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">OKF 구조</h3>
+      <div class="code-block">
+        <div style="color: var(--primary-deep); font-weight: 700;">---</div>
+        <div><span style="color: var(--primary-deep);">type:</span> architecture</div>
+        <div><span style="color: var(--primary-deep);">title:</span> "시스템 아키텍처 개요"</div>
+        <div><span style="color: var(--primary-deep);">description:</span> "마이크로서비스 기반"</div>
+        <div><span style="color: var(--primary-deep);">tags:</span> [backend, microservices, deployment]</div>
+        <div><span style="color: var(--primary-deep);">resource:</span> src/architecture/</div>
+        <div><span style="color: var(--primary-deep);">timestamp:</span> 2024-08-20T10:30:00Z</div>
+        <div style="color: var(--primary-deep); font-weight: 700; margin-top: 10px;">---</div>
+      </div>
+    </section>
+
+    <!-- 05. CLI 사용법 -->
+    <section class="section" id="s5">
+      <h2 class="section-heading">🔧 CLI 사용법</h2>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">커맨드 1: open wiki init</h3>
+      <p style="margin-bottom: 15px;">저장소에서 최초 1회 실행하여 모든 것을 설정합니다.</p>
+
+      <div class="code-block">
+        <div><strong># 설치</strong></div>
+        <div style="margin-top: 8px; color: var(--primary-deep);">npm install openwiki</div>
+
+        <div style="margin-top: 15px;"><strong># 초기화 (대화형 설정)</strong></div>
+        <div style="margin-top: 8px; color: var(--primary-deep);">open wiki init</div>
+
+        <div style="margin-top: 15px;"><strong># 자동으로 생성되는 것들:</strong></div>
+        <div style="margin-left: 20px; margin-top: 8px;">• agents.md 또는 claw.md 수정</div>
+        <div style="margin-left: 20px;">• GitHub Actions 워크플로우</div>
+        <div style="margin-left: 20px;">• 매일 실행되는 cron job</div>
+      </div>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">커맨드 2: open wiki update</h3>
+      <p style="margin-bottom: 15px;">GitHub Actions에서 매일 자동으로 실행됩니다.</p>
+
+      <div class="code-block">
+        <div><strong># 동작 순서</strong></div>
+        <div style="margin-top: 8px;">1️⃣ Git 히스토리 분석</div>
+        <div style="margin-top: 8px;">2️⃣ 변경사항 감지</div>
+        <div style="margin-top: 8px;">3️⃣ 문서 자동 업데이트</div>
+        <div style="margin-top: 8px;">4️⃣ PR 자동 생성</div>
+      </div>
+    </section>
+
+    <!-- 06. 성능 평가 -->
+    <section class="section" id="s6">
+      <h2 class="section-heading">📊 성능 평가</h2>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">벤치마크 결과</h3>
+      <p style="margin-bottom: 15px;">Deep Seek 벤치마크를 통한 초기 평가</p>
+
+      <div class="code-block">
+        <div><strong>성공 작업:</strong> 7-8개 → 9-10개 (+20%)</div>
+        <div style="margin-top: 10px;"><strong>도구 호출:</strong> 기준선 → ↓ 감소</div>
+        <div style="margin-top: 10px;"><strong>토큰 소비:</strong> 기준선 → ↓ 크게 감소</div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">핵심 발견</div>
+        <div class="callout-text">
+          동일하거나 더 나은 결과를 <strong>훨씬 적은 토큰</strong>으로 달성했습니다.
+        </div>
+      </div>
+    </section>
+
+    <!-- 07. 향후 계획 -->
+    <section class="section" id="s7">
+      <h2 class="section-heading">🚀 향후 계획</h2>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">1. 더 나은 프롬프팅</h3>
+      <div class="code-block">
+        <div>• Evals 강화</div>
+        <div style="margin-top: 8px;">• 더 큰 저장소 지원</div>
+        <div style="margin-top: 8px;">• 자체 업데이트 능력 향상</div>
+      </div>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">2. 검색 및 검색 도구</h3>
+      <p style="margin-bottom: 15px;">전용 검색 도구로 에이전트가 더 효율적으로 활용</p>
+      <div class="code-block">
+        <div>• 전용 검색 도구</div>
+        <div style="margin-top: 8px;">• 고급 필터링</div>
+        <div style="margin-top: 8px;">• 동적 쿼리 처리</div>
+      </div>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-top: 25px; margin-bottom: 15px;">3. 범위 확대</h3>
+      <p>조직 정보, 시스템 설계, 비즈니스 규칙 등으로 확장 예정</p>
+    </section>
+
+    <!-- 결론 -->
+    <section class="section">
+      <h2 class="section-heading">결론</h2>
+      <div class="callout">
+        <div class="callout-title">에이전트 시대의 새로운 문서 패러다임</div>
+        <div class="callout-text">
+          OpenWiki는 단순한 문서 생성 도구가 아닙니다.
+          <strong>에이전트 중심의 문서 철학</strong>을 실현합니다.
+          이제 시작할 시간입니다.
+        </div>
+      </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+      <p>
+        <strong>OpenWiki</strong> · MIT License · Open Source<br>
+        설치: <code>npm install openwiki</code><br>
+        출처: YouTube 트랜스크립트 · 2024년 발표
+      </p>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+// 네비게이션 자동 하이라이트
+const navItems = document.querySelectorAll('.nav-item');
+const sections = document.querySelectorAll('.section');
+
+window.addEventListener('scroll', function() {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    if (window.pageYOffset >= sectionTop - 100) {
+      current = section.getAttribute('id');
+    }
+  });
+
+  navItems.forEach(item => {
+    item.classList.remove('active');
+  });
+
+  if (current) {
+    document.querySelector(`[onclick="document.getElementById('${current}').scrollIntoView({behavior:'smooth'})"]`)?.classList.add('active');
+  }
+});
+</script>
+
+</body>
+</html>

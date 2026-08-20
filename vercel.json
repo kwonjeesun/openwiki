@@ -1,6 +1,4 @@
 {
   "buildCommand": "echo 'Static HTML'",
-  "installCommand": "echo 'No install needed'",
-  "name": "openwiki",
-  "public": true
+  "installCommand": "echo 'No install needed'"
 }
